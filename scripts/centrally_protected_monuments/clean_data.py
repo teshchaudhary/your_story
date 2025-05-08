@@ -15,8 +15,14 @@ def clean_data(raw_data_path, cleaned_data_path, numeric_columns=None):
     with open(raw_data_path, 'r') as file:
         raw_data = json.load(file)
 
-    # Extract relevant records
-    records = raw_data.get("records", [])
+    # Check if the data is a list of records or a dictionary with "records"
+    if isinstance(raw_data, dict):
+        records = raw_data.get("records", [])
+    elif isinstance(raw_data, list):
+        records = raw_data
+    else:
+        print(f"Unexpected data format in {raw_data_path}")
+        return
 
     # Prepare the cleaned data
     cleaned_data = []
@@ -55,34 +61,20 @@ def clean_data(raw_data_path, cleaned_data_path, numeric_columns=None):
     print(f"Data cleaned and saved to '{cleaned_data_path}'")
 
 # Define the directory to save the cleaned data
-processed_dir = 'data/tourism_statistics/processed'
+processed_dir = 'data/centrally_protected_monuments/processed'
 if not os.path.exists(processed_dir):
     os.makedirs(processed_dir)
 
-# Clean the FTA data
+# Clean the CPM data with the corrected numeric columns
 clean_data(
-    raw_data_path='data/tourism_statistics/raw/fta_data.json',
-    cleaned_data_path=os.path.join(processed_dir, 'fta_data_cleaned.csv'),
+    raw_data_path='data/centrally_protected_monuments/raw/visitors_to_cpm_1996-2018.json',
+    cleaned_data_path=os.path.join(processed_dir, 'visitors_to_cpm_cleaned.csv'),
     numeric_columns=[
-        'ftas_in_india_in_million_',
-        'percentage_change_over_previous_year',
-        'nris_arrivals_in_india_in_million_',
-        'ercentage_change_over_the_previous_year',
-        'international_tourist_arrivals_in_india_in_million_',
-        'percentage_change_over_the_previous_year'
-    ]
-)
-
-
-# Clean the NRI data
-clean_data(
-    raw_data_path='data/tourism_statistics/raw/nri_data.json',
-    cleaned_data_path=os.path.join(processed_dir, 'nri_data_cleaned.csv'),
-    numeric_columns=[
-        '_2018',
-        '_2019',
-        '_2020',
-        'growth_2019_18_',
-        'growth_2020_19_'
+        'no__of_visitors___domestic',
+        'no__of_visitors___foreign',
+        'no__of_visitors___total',
+        'annual_growth_rate___domestic',
+        'annual_growth_rate___foreign',
+        'annual_growth_rate___total'
     ]
 )

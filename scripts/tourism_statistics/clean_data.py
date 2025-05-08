@@ -16,7 +16,8 @@ def clean_data(raw_data_path, cleaned_data_path, numeric_columns=None):
         raw_data = json.load(file)
 
     # Extract relevant records
-    records = raw_data.get("records", [])
+    records = raw_data
+
 
     # Prepare the cleaned data
     cleaned_data = []

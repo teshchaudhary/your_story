@@ -21,47 +21,62 @@ i_nri = 0
 flag_fta = True
 flag_nri = True
 
+fta_records = []
+nri_records = []
+
 while flag_fta or flag_nri:
 
-    # Fetching Foreign Tourist Arrivals (FTA) data
-    url_fta = f"{url_fta_base}{i_fta}"
-    response_fta = requests.get(url_fta)
+    # Fetching FTA data
+    if flag_fta:
+        url_fta = f"{url_fta_base}{i_fta}"
+        response_fta = requests.get(url_fta)
 
-    # Fetching Non-Resident Indians (NRI) arrivals data
-    url_nri = f"{url_nri_base}{i_nri}"
-    response_nri = requests.get(url_nri)
+        if response_fta.status_code == 200:
+            data_fta = response_fta.json()
+            records = data_fta.get('records', [])
+            count_fta = len(records)
 
-    if response_fta.status_code == 200:
-        data_fta = response_fta.json()
-        count_fta = len(data_fta['records'])
+            print(f"Fetched {count_fta} FTA records at offset {i_fta}.")
+            i_fta += 100
 
-        print(f"Fetched {count_fta} records for FTA.")
-        i_fta += 100  # Move to the next batch of records
+            if count_fta == 0:
+                flag_fta = False
+            else:
+                fta_records.extend(records)
+        else:
+            print(f"Failed to fetch FTA data: {response_fta.status_code}")
+            flag_fta = False  # Prevent infinite loop on failure
 
-        if count_fta == 0:
-            flag_fta = False  # Exit loop when no more records for FTA
+    # Fetching NRI data
+    if flag_nri:
+        url_nri = f"{url_nri_base}{i_nri}"
+        response_nri = requests.get(url_nri)
 
-        with open("data/tourism_statistics/raw/fta_data.json", "a") as f_fta:
-            json.dump(data_fta, f_fta, indent=4)
+        if response_nri.status_code == 200:
+            data_nri = response_nri.json()
+            records = data_nri.get('records', [])
+            count_nri = len(records)
 
-    else:
-        print(f"Failed to fetch FTA data: {response_fta.status_code}")
+            print(f"Fetched {count_nri} NRI records at offset {i_nri}.")
+            i_nri += 100
 
-    if response_nri.status_code == 200:
-        data_nri = response_nri.json()
-        count_nri = len(data_nri['records'])
+            if count_nri == 0:
+                flag_nri = False
+            else:
+                nri_records.extend(records)
+        else:
+            print(f"Failed to fetch NRI data: {response_nri.status_code}")
+            flag_nri = False  # Prevent infinite loop on failure
 
-        print(f"Fetched {count_nri} records for NRI.")
-        i_nri += 100  # Move to the next batch of records
+    time.sleep(1)  # Respect rate limits
 
-        if count_nri == 0:
-            flag_nri = False  # Exit loop when no more records for NRI
+# Save only the combined records to JSON
+os.makedirs("data/tourism_statistics/raw", exist_ok=True)
 
-        with open("data/tourism_statistics/raw/nri_data.json", "a") as f_nri:
-            json.dump(data_nri, f_nri, indent=4)
+with open("data/tourism_statistics/raw/fta_data.json", "w") as f_fta:
+    json.dump(fta_records, f_fta, indent=4)
 
-    else:
-        print(f"Failed to fetch NRI data: {response_nri.status_code}")
+with open("data/tourism_statistics/raw/nri_data.json", "w") as f_nri:
+    json.dump(nri_records, f_nri, indent=4)
 
-    # Wait for 1 second before making the next API call
-    time.sleep(1)
+print("Data fetching complete.")
