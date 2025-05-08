@@ -7,36 +7,28 @@ load_dotenv()
 
 API_KEY = os.getenv("DATA_GOV_API_KEY")
 
-# Dataset Resource IDs
-RESOURCE_ID_FTA = "/resource/5015c014-507e-4ddf-8051-2c92dd426d38"
-RESOURCE_ID_NRI = "/resource/8db754ef-1776-416a-bfbd-bc5696e31492"
+RESOURCE_ID = "/resource/62498cb9-f17e-4afd-ad4e-b2d6c8ff0768"
 
-# API URLs for both datasets
-url_fta = f"https://api.data.gov.in{RESOURCE_ID_FTA}?api-key={API_KEY}&format=json&limit=100"
-url_nri = f"https://api.data.gov.in{RESOURCE_ID_NRI}?api-key={API_KEY}&format=json&limit=100"
+i = 0
+flag = True
+while flag:
 
-# Fetching Foreign Tourist Arrivals (FTA) data
-response_fta = requests.get(url_fta)
+    url = f"https://api.data.gov.in{RESOURCE_ID}?api-key={API_KEY}&format=json&limit=100&offset={i}"
 
-# Fetching Non-Resident Indians (NRI) arrivals data
-response_nri = requests.get(url_nri)
+    response = requests.get(url)
 
-# Check if both requests were successful
-if response_fta.status_code == 200 and response_nri.status_code == 200:
-    data_fta = response_fta.json()
-    data_nri = response_nri.json()
 
-    # Print the number of records fetched
-    print(f"Fetched {len(data_fta['records'])} records for FTA.")
-    print(f"Fetched {len(data_nri['records'])} records for NRI.")
+    if response.status_code == 200:
+        data = response.json()
+        count = len(data['records'])
 
-    # Save data to JSON files
-    with open("data/raw/fta_data.json", "w") as f_fta:
-        json.dump(data_fta, f_fta, indent=4)
+        print(f"Fetched {count} records.")
+        i += 1
+        if count == 0:
+            flag = False
 
-    with open("data/raw/nri_data.json", "w") as f_nri:
-        json.dump(data_nri, f_nri, indent=4)
+        with open("data/centrally_protected_monuments/raw/visitors_to_cpm_1996-2018.json", "a") as f:
+            json.dump(data, f, indent=4)
 
-else:
-    print(f"Failed to fetch FTA data: {response_fta.status_code}")
-    print(f"Failed to fetch NRI data: {response_nri.status_code}")
+    else:
+        print(f"Failed to fetch FTA data: {response.status_code}")
