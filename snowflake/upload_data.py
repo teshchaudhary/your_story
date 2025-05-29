@@ -2,7 +2,6 @@ import snowflake.connector
 import pandas as pd
 from config.snowflake_config import *
 
-# Example code to upload data to Snowflake
 def upload_to_snowflake(df, table_name):
     conn = snowflake.connector.connect(
         user=SNOWFLAKE_USER,
