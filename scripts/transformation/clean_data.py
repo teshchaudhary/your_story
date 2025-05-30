@@ -13,8 +13,10 @@ for dirpath, dirnames, filenames in os.walk(root_dir):
             full_path = os.path.join(dirpath, filename)
             try:
                 df = pd.read_csv(full_path)
-                rel_path_key = os.path.relpath(full_path, root_dir).replace(os.sep, "_").replace(".csv", "")
-                dfs_dict[rel_path_key] = df
+
+                file_stem = os.path.splitext(filename)[0]
+                dfs_dict[file_stem] = df
+
             except Exception as e:
                 print(f"Error processing {full_path}: {e}")
 
