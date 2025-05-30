@@ -27,7 +27,21 @@ for dirpath, dirnames, filenames in os.walk(root_dir):
                     dfs_dict[rel_path_key] = df
 
             except Exception as e:
-                print(f"Error processing {full_path}: {e}")\
+                print(f"Error processing {full_path}: {e}")
+
+output_dir = "local_output/bronze/"
+os.makedirs(output_dir, exist_ok=True)
+
+for table_name, df in dfs_dict.items():
+    clean_name = table_name.lower().replace("-", "_").replace(" ", "_")
+
+    short_hash = hashlib.md5(clean_name.encode()).hexdigest()
+    clean_name = clean_name[:80] + "_" + short_hash[:8]
+
+    output_path = os.path.join(output_dir, f"{clean_name}.csv")
+
+    df.to_csv(output_path, index=False)
+    print(f"✅ Saved: {output_path}")                
 
 row_wise_normailze = []
 def transform_dataframe(df, fill_median_axis='column'):
@@ -64,7 +78,7 @@ def transform_dataframe(df, fill_median_axis='column'):
     else:
         raise ValueError("fill_median_axis must be either 'row' or 'column'")
 
-    return df
+    return df    
 
 df_dict_transformed = {}
 for name, df in dfs_dict.items():
