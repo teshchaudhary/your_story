@@ -1,57 +1,105 @@
 import os
+import hashlib
 import snowflake.connector
+import sys
 from dotenv import load_dotenv
+import pyarrow.parquet as pq
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+from config.snowflake_config import *
 load_dotenv()
 
 conn = snowflake.connector.connect(
-    user=os.getenv('SNOWFLAKE_USER'),
-    password=os.getenv('SNOWFLAKE_PASSWORD'),
-    account=os.getenv('SNOWFLAKE_ACCOUNT'),
-    warehouse=os.getenv('SNOWFLAKE_WAREHOUSE'),
-    database=os.getenv('SNOWFLAKE_DATABASE'),
-    schema=os.getenv('SNOWFLAKE_SCHEMA'),
-    role=os.getenv('SNOWFLAKE_ROLE')
+    user=SNOWFLAKE_USER,
+    password=SNOWFLAKE_PASSWORD,
+    account=SNOWFLAKE_ACCOUNT,
+    warehouse=SNOWFLAKE_WAREHOUSE,
+    database=SNOWFLAKE_DATABASE,
+    schema=SNOWFLAKE_SCHEMA,
+    role=SNOWFLAKE_ROLE
 )
+cursor = conn.cursor()
 
-def upload_parquet_folder_to_snowflake(base_folder="data/silver"):
-    cs = conn.cursor()
+def sanitize_table_name(name):
+    name = name.lower().replace(" ", "_").replace("-", "_").replace(",", "_")
+    short_hash = hashlib.md5(name.encode()).hexdigest()[:8]
+    return f"{name[:72]}_{short_hash}"
+
+def map_dtype_arrow_to_snowflake(pa_type):
+    pa_type = str(pa_type).lower()
+    if "int" in pa_type:
+        return "NUMBER"
+    elif "float" in pa_type or "double" in pa_type:
+        return "FLOAT"
+    elif "string" in pa_type or "binary" in pa_type or "largeutf8" in pa_type:
+        return "STRING"
+    elif "timestamp" in pa_type:
+        return "TIMESTAMP_NTZ"
+    elif "bool" in pa_type or "boolean" in pa_type:
+        return "BOOLEAN"
+    else:
+        return "STRING"
+
+def create_table_from_parquet(cursor, table_name, parquet_file_path):
+    table_name_clean = table_name.lower()
+    parquet_schema = pq.read_schema(parquet_file_path)
+
+    column_defs = ",\n    ".join([
+        f'"{field.name}" {map_dtype_arrow_to_snowflake(field.type)}'
+        for field in parquet_schema
+    ])
+
+    create_stmt = f"""
+    CREATE TABLE IF NOT EXISTS "{table_name_clean}" (
+        {column_defs}
+    );
+    """
+    print(f"🛠️ Creating table if not exists: {table_name_clean}")
+    cursor.execute(create_stmt)
+
+def upload_parquet_to_snowflake(base_folder="data/silver"):
     try:
-        # List all subfolders (each corresponds to a table)
-        for table_name in os.listdir(base_folder):
-            table_folder = os.path.join(base_folder, table_name)
-            if not os.path.isdir(table_folder):
-                continue  # skip files, only folders
-                
-            print(f"\nUploading parquet files in folder '{table_name}' to Snowflake table '{table_name}'")
+        for original_table_name in os.listdir(base_folder):
+            table_path = os.path.join(base_folder, original_table_name)
+            if not os.path.isdir(table_path):
+                continue
 
-            parquet_files = [f for f in os.listdir(table_folder) if f.endswith('.parquet')]
+            sanitized_table = sanitize_table_name(original_table_name)
+            parquet_files = [f for f in os.listdir(table_path) if f.endswith('.parquet')]
             if not parquet_files:
-                print(f"No parquet files found in {table_folder}, skipping.")
+                print(f"❌ No parquet files in {table_path}, skipping.")
                 continue
 
             for file in parquet_files:
-                local_file_path = os.path.join(table_folder, file)
-                stage_name = f"@%{table_name}"  # table stage for the table
+                local_file_path = os.path.abspath(os.path.join(table_path, file))
 
-                # PUT file to stage
-                put_cmd = f"PUT file://{local_file_path} {stage_name} AUTO_COMPRESS=FALSE"
-                print(f"Uploading file {file} to stage {stage_name}...")
-                cs.execute(put_cmd)
+                # Create table based on parquet schema
+                create_table_from_parquet(cursor, sanitized_table, local_file_path)
 
-                # COPY INTO table from stage file
-                copy_cmd = f"""
-                COPY INTO {table_name}
-                FROM {stage_name}/{file}
-                FILE_FORMAT = (TYPE = 'PARQUET')
-                PURGE = TRUE
+                # Create a temporary stage
+                stage_name = f"staging_{sanitized_table}"
+                cursor.execute(f"CREATE OR REPLACE TEMPORARY STAGE {stage_name}")
+                stage_path = f"@{stage_name}"
+
+                # PUT command to upload parquet to stage
+                put_command = f"PUT 'file://{local_file_path}' {stage_path} AUTO_COMPRESS=TRUE"
+                print(f"🔼 PUT: {put_command}")
+                cursor.execute(put_command)
+
+                # COPY INTO command
+                copy_command = f"""
+                    COPY INTO "{sanitized_table}"
+                    FROM {stage_path}
+                    FILE_FORMAT = (TYPE = PARQUET)
+                    MATCH_BY_COLUMN_NAME = CASE_INSENSITIVE
+                    PURGE = TRUE
                 """
-                print(f"Loading data from {file} into Snowflake table {table_name}...")
-                cs.execute(copy_cmd)
+                print(f"📥 COPY INTO: {copy_command.strip()}")
+                cursor.execute(copy_command)
 
-                print(f"✅ Uploaded and loaded file '{file}' into table '{table_name}'")
+                print(f"✅ Loaded '{file}' into Snowflake table '{sanitized_table}'")
     finally:
-        cs.close()
+        cursor.close()
         conn.close()
 
-# Run upload for all folders in data/silver
-upload_parquet_folder_to_snowflake()
+upload_parquet_to_snowflake()
