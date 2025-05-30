@@ -1,4 +1,7 @@
 .venv
 .env
 local_output/
+.streamlit
 __pycache__/
+table_schemas.json
+sandbox.py

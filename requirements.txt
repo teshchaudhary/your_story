@@ -1,5 +1,12 @@
 streamlit
-pandas
 requests
 python-dotenv
 snowflake-connector-python
+pandas
+numpy
+matplotlib==3.7.1
+seaborn
+pyarrow
+plotly
+pandas-stubs
+types-seaborn==0.12.1
