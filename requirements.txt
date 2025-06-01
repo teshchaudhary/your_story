@@ -9,4 +9,8 @@ seaborn
 pyarrow
 plotly
 pandas-stubs
+<<<<<<< HEAD
 types-seaborn
+=======
+types-seaborn
+>>>>>>> 2d29a4e95f5db22e43b3d5aab1787c2627b0091d
