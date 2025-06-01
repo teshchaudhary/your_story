@@ -1,0 +1,430 @@
+{
+  "domestic_tour_travels_2018_2022_d6a26721_d98c1689": [
+    {
+      "column_name": "year",
+      "type": "NUMBER(38,0)",
+      "nullable": "Y"
+    },
+    {
+      "column_name": "dtv__in_lakh_",
+      "type": "FLOAT",
+      "nullable": "Y"
+    },
+    {
+      "column_name": "ftv__in_lakh_",
+      "type": "FLOAT",
+      "nullable": "Y"
+    }
+  ],
+  "eco_sensitive_zones_2015_bfd2221e_d85d75dc": [
+    {
+      "column_name": "_s__no_",
+      "type": "VARCHAR(16777216)",
+      "nullable": "Y"
+    },
+    {
+      "column_name": "state",
+      "type": "VARCHAR(16777216)",
+      "nullable": "Y"
+    },
+    {
+      "column_name": "number_of_complete_esz_proposals_with_the_ministry",
+      "type": "NUMBER(38,0)",
+      "nullable": "Y"
+    },
+    {
+      "column_name": "number_of_esz_proposals_approved_notified",
+      "type": "NUMBER(38,0)",
+      "nullable": "Y"
+    },
+    {
+      "column_name": "number_of_protected_areas_covered_under_the_approved_notified_esz_proposals",
+      "type": "NUMBER(38,0)",
+      "nullable": "Y"
+    },
+    {
+      "column_name": "number_of_esz_proposals_to_be_notified",
+      "type": "NUMBER(38,0)",
+      "nullable": "Y"
+    }
+  ],
+  "foreign_exchange_earnings_1991_2023_48bdf5cd_54a21847": [
+    {
+      "column_name": "year",
+      "type": "NUMBER(38,0)",
+      "nullable": "Y"
+    },
+    {
+      "column_name": "fee_in_terms_crore",
+      "type": "NUMBER(38,0)",
+      "nullable": "Y"
+    },
+    {
+      "column_name": "fee_in_terms_change_over_previous_year",
+      "type": "FLOAT",
+      "nullable": "Y"
+    },
+    {
+      "column_name": "fee_in_us_terms_us_million",
+      "type": "NUMBER(38,0)",
+      "nullable": "Y"
+    },
+    {
+      "column_name": "fee_in_us_terms_change_over_previous_year",
+      "type": "FLOAT",
+      "nullable": "Y"
+    }
+  ],
+  "foreign_tourist_arrivals_1981_2020_f9158194_eb71304f": [
+    {
+      "column_name": "year",
+      "type": "NUMBER(38,0)",
+      "nullable": "Y"
+    },
+    {
+      "column_name": "ftas_in_india_in_million_",
+      "type": "FLOAT",
+      "nullable": "Y"
+    },
+    {
+      "column_name": "percentage_change_over_previous_year",
+      "type": "FLOAT",
+      "nullable": "Y"
+    },
+    {
+      "column_name": "nris_arrivals_in_india_in_million_",
+      "type": "FLOAT",
+      "nullable": "Y"
+    },
+    {
+      "column_name": "ercentage_change_over_the_previous_year",
+      "type": "FLOAT",
+      "nullable": "Y"
+    },
+    {
+      "column_name": "international_tourist_arrivals_in_india_in_million_",
+      "type": "FLOAT",
+      "nullable": "Y"
+    },
+    {
+      "column_name": "percentage_change_over_the_previous_year",
+      "type": "FLOAT",
+      "nullable": "Y"
+    }
+  ],
+  "inbound_tourism_foreign_tourist_arrivals_of_non_resident_indians_and_int_7958d941": [
+    {
+      "column_name": "year",
+      "type": "NUMBER(38,0)",
+      "nullable": "Y"
+    },
+    {
+      "column_name": "ftas_in_india_in_million_",
+      "type": "FLOAT",
+      "nullable": "Y"
+    },
+    {
+      "column_name": "percentage_change_over_previous_year",
+      "type": "FLOAT",
+      "nullable": "Y"
+    },
+    {
+      "column_name": "nris_arrivals_in_india_in_million_",
+      "type": "FLOAT",
+      "nullable": "Y"
+    },
+    {
+      "column_name": "ercentage_change_over_the_previous_year",
+      "type": "FLOAT",
+      "nullable": "Y"
+    },
+    {
+      "column_name": "international_tourist_arrivals_in_india_in_million_",
+      "type": "FLOAT",
+      "nullable": "Y"
+    },
+    {
+      "column_name": "percentage_change_over_the_previous_year",
+      "type": "FLOAT",
+      "nullable": "Y"
+    }
+  ],
+  "month_wise_break_up_of_non_residents_indians_arrivals_2018_2020_c1f4090c_3b9627b4": [
+    {
+      "column_name": "months",
+      "type": "VARCHAR(16777216)",
+      "nullable": "Y"
+    },
+    {
+      "column_name": "_2018",
+      "type": "NUMBER(38,0)",
+      "nullable": "Y"
+    },
+    {
+      "column_name": "_2019",
+      "type": "NUMBER(38,0)",
+      "nullable": "Y"
+    },
+    {
+      "column_name": "_2020",
+      "type": "NUMBER(38,0)",
+      "nullable": "Y"
+    },
+    {
+      "column_name": "growth_2019_18_",
+      "type": "FLOAT",
+      "nullable": "Y"
+    },
+    {
+      "column_name": "growth_2020_19_",
+      "type": "FLOAT",
+      "nullable": "Y"
+    }
+  ],
+  "monuments_funding_2016_2021_e9e638f4_75d463ea": [
+    {
+      "column_name": "_year",
+      "type": "VARCHAR(16777216)",
+      "nullable": "Y"
+    },
+    {
+      "column_name": "number_of_tourists",
+      "type": "NUMBER(38,0)",
+      "nullable": "Y"
+    },
+    {
+      "column_name": "revenue_generated",
+      "type": "FLOAT",
+      "nullable": "Y"
+    },
+    {
+      "column_name": "funds_allocated",
+      "type": "FLOAT",
+      "nullable": "Y"
+    },
+    {
+      "column_name": "expenditure_incurred",
+      "type": "FLOAT",
+      "nullable": "Y"
+    }
+  ],
+  "monuments_under_encroachment_988b521c_fae27799": [
+    {
+      "column_name": "s_no_",
+      "type": "NUMBER(38,0)",
+      "nullable": "Y"
+    },
+    {
+      "column_name": "state",
+      "type": "VARCHAR(16777216)",
+      "nullable": "Y"
+    },
+    {
+      "column_name": "name_of_monument_site",
+      "type": "VARCHAR(16777216)",
+      "nullable": "Y"
+    },
+    {
+      "column_name": "locality_district",
+      "type": "VARCHAR(16777216)",
+      "nullable": "Y"
+    }
+  ],
+  "number_of_visitors_to_centrally_protected_tickted_monuments_2019_20_2020_60f5e88f": [
+    {
+      "column_name": "Circle",
+      "type": "VARCHAR(16777216)",
+      "nullable": "Y"
+    },
+    {
+      "column_name": "Name of the Monument ",
+      "type": "VARCHAR(16777216)",
+      "nullable": "Y"
+    },
+    {
+      "column_name": "Domestic-2019-20",
+      "type": "NUMBER(38,0)",
+      "nullable": "Y"
+    },
+    {
+      "column_name": "Foreign-2019-20",
+      "type": "NUMBER(38,0)",
+      "nullable": "Y"
+    },
+    {
+      "column_name": "Domestic-2020-21",
+      "type": "NUMBER(38,0)",
+      "nullable": "Y"
+    },
+    {
+      "column_name": "Foreign-2020-21",
+      "type": "NUMBER(38,0)",
+      "nullable": "Y"
+    },
+    {
+      "column_name": "% Growth 2021-21/2019-20-Domestic",
+      "type": "FLOAT",
+      "nullable": "Y"
+    },
+    {
+      "column_name": "% Growth 2021-21/2019-20-Foreign",
+      "type": "FLOAT",
+      "nullable": "Y"
+    }
+  ],
+  "pilgrimage_rejuvenation_and_spiritual_heritage_augmentation_drive_prasha_a8ea909d": [
+    {
+      "column_name": "Sl. No",
+      "type": "NUMBER(38,0)",
+      "nullable": "Y"
+    },
+    {
+      "column_name": "Name Of The Project",
+      "type": "VARCHAR(16777216)",
+      "nullable": "Y"
+    },
+    {
+      "column_name": "Year Of Sanction",
+      "type": "VARCHAR(16777216)",
+      "nullable": "Y"
+    },
+    {
+      "column_name": "Approved Cost Crore",
+      "type": "FLOAT",
+      "nullable": "Y"
+    }
+  ],
+  "seasonal_temperature_1901_2019_7a6a9b18_8e666b4b": [
+    {
+      "column_name": "year",
+      "type": "NUMBER(38,0)",
+      "nullable": "Y"
+    },
+    {
+      "column_name": "annual",
+      "type": "FLOAT",
+      "nullable": "Y"
+    },
+    {
+      "column_name": "jan_feb",
+      "type": "FLOAT",
+      "nullable": "Y"
+    },
+    {
+      "column_name": "mar_may",
+      "type": "FLOAT",
+      "nullable": "Y"
+    },
+    {
+      "column_name": "jun_sep",
+      "type": "FLOAT",
+      "nullable": "Y"
+    },
+    {
+      "column_name": "oct_dec",
+      "type": "FLOAT",
+      "nullable": "Y"
+    }
+  ],
+  "state_fairs_festivals_2014_2021_337926d0_cb05aed2": [
+    {
+      "column_name": "name_of_state_ut",
+      "type": "VARCHAR(16777216)",
+      "nullable": "Y"
+    },
+    {
+      "column_name": "_year",
+      "type": "VARCHAR(16777216)",
+      "nullable": "Y"
+    },
+    {
+      "column_name": "name_of_fairs_and_festivals",
+      "type": "VARCHAR(16777216)",
+      "nullable": "Y"
+    },
+    {
+      "column_name": "amount_sanctioned",
+      "type": "FLOAT",
+      "nullable": "Y"
+    },
+    {
+      "column_name": "amount_released",
+      "type": "FLOAT",
+      "nullable": "Y"
+    }
+  ],
+  "state_ut_wise_number_of_beneficiaries_and_funds_released_for_preservatio_0d1075ae": [
+    {
+      "column_name": "sl__no_",
+      "type": "VARCHAR(16777216)",
+      "nullable": "Y"
+    },
+    {
+      "column_name": "state_ut",
+      "type": "VARCHAR(16777216)",
+      "nullable": "Y"
+    },
+    {
+      "column_name": "_2019_2020___number_of_organization",
+      "type": "FLOAT",
+      "nullable": "Y"
+    },
+    {
+      "column_name": "_2019_2020___amount__rs__",
+      "type": "FLOAT",
+      "nullable": "Y"
+    },
+    {
+      "column_name": "_2020_2021___number_of_organization",
+      "type": "NUMBER(38,0)",
+      "nullable": "Y"
+    },
+    {
+      "column_name": "_2020_2021___amount__rs__",
+      "type": "FLOAT",
+      "nullable": "Y"
+    },
+    {
+      "column_name": "_2021_2022___number_of_organization",
+      "type": "NUMBER(38,0)",
+      "nullable": "Y"
+    },
+    {
+      "column_name": "_2021_2022___amount__rs__",
+      "type": "FLOAT",
+      "nullable": "Y"
+    },
+    {
+      "column_name": "_2022_2023___number_of_organization",
+      "type": "NUMBER(38,0)",
+      "nullable": "Y"
+    },
+    {
+      "column_name": "_2022_2023___amount__rs__",
+      "type": "FLOAT",
+      "nullable": "Y"
+    },
+    {
+      "column_name": "_2023_2024___number_of_organization_authorized",
+      "type": "NUMBER(38,0)",
+      "nullable": "Y"
+    },
+    {
+      "column_name": "_2023_2024___amount_authorized_for_withdrawal__rs__",
+      "type": "FLOAT",
+      "nullable": "Y"
+    }
+  ],
+  "year_wise_details_of_funds_allocated_by_the_archaeological_survey_of_ind_36e6523a": [
+    {
+      "column_name": "_year",
+      "type": "VARCHAR(16777216)",
+      "nullable": "Y"
+    },
+    {
+      "column_name": "allocation__amount_in_crore_",
+      "type": "FLOAT",
+      "nullable": "Y"
+    }
+  ]
+}

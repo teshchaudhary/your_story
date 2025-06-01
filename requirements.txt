@@ -4,9 +4,9 @@ python-dotenv
 snowflake-connector-python
 pandas
 numpy
-matplotlib==3.7.1
+matplotlib
 seaborn
 pyarrow
 plotly
 pandas-stubs
-types-seaborn==0.12.1
+types-seaborn
