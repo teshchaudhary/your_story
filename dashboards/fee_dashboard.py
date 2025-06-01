@@ -18,15 +18,28 @@ def show():
     if df is None or df.empty:
         st.warning("No data available to display.")
         return
+
+    # Initialize session state for filter toggle
+    if 'show_filters' not in st.session_state:
+        st.session_state.show_filters = False
     
-    # Sidebar filters
-    years = df['year'].sort_values().unique()
-    min_year, max_year = int(years.min()), int(years.max())
-    year_range = st.sidebar.slider("Select Year Range", min_year, max_year, (min_year, max_year))
-    df_filtered = df[(df['year'] >= year_range[0]) & (df['year'] <= year_range[1])]
-    
-    # Display raw data toggle
-    if st.sidebar.checkbox("Show Raw Data"):
+    # Show/Hide Filters toggle button in sidebar
+    if st.sidebar.button("🔍 Show/Hide Filters"):
+        st.session_state.show_filters = not st.session_state.show_filters
+
+    # Apply filters only if toggled on
+    if st.session_state.show_filters:
+        years = df['year'].sort_values().unique()
+        min_year, max_year = int(years.min()), int(years.max())
+        year_range = st.sidebar.slider("Select Year Range", min_year, max_year, (min_year, max_year))
+        df_filtered = df[(df['year'] >= year_range[0]) & (df['year'] <= year_range[1])]
+    else:
+        df_filtered = df
+
+    # Checkbox for showing raw data in sidebar
+    show_raw = st.sidebar.checkbox("Show Raw Data")
+
+    if show_raw:
         st.subheader("Raw Foreign Exchange Earnings Data")
         st.dataframe(df_filtered.reset_index(drop=True))
     
@@ -37,7 +50,6 @@ def show():
     total_fee_crore = df_filtered['fee_in_terms_crore'].sum()
     total_fee_usd = df_filtered['fee_in_us_terms_us_million'].sum()
     
-    # Average growth in INR and USD
     avg_growth_inr = df_filtered['fee_in_terms_change_over_previous_year'].mean()
     avg_growth_usd = df_filtered['fee_in_us_terms_change_over_previous_year'].mean()
     
@@ -68,28 +80,21 @@ def show():
         st.write("No significant changes detected in selected year range.")
 
 def plot_fee_trends(df):
-    # plt.style.use('seaborn-darkgrid')
     fig, ax = plt.subplots(figsize=(10,5))
-    
     ax.plot(df['year'], df['fee_in_terms_crore'], marker='o', label='FEE (Crore INR)')
     ax.plot(df['year'], df['fee_in_us_terms_us_million'], marker='x', label='FEE (Million USD)')
-    
     ax.set_xlabel("Year")
     ax.set_ylabel("Foreign Exchange Earnings")
     ax.set_title("Foreign Exchange Earnings (FEE) Trends")
     ax.legend()
     plt.xticks(rotation=45)
     plt.tight_layout()
-    
     return fig
 
 def plot_fee_changes(df):
-    plt.style.use('seaborn-darkgrid')
     fig, ax = plt.subplots(figsize=(10,5))
-    
     ax.bar(df['year'] - 0.2, df['fee_in_terms_change_over_previous_year'], width=0.4, label='INR % Change')
     ax.bar(df['year'] + 0.2, df['fee_in_us_terms_change_over_previous_year'], width=0.4, label='USD % Change')
-    
     ax.set_xlabel("Year")
     ax.set_ylabel("Yearly % Change")
     ax.set_title("Yearly Percentage Change in FEE")
@@ -97,5 +102,4 @@ def plot_fee_changes(df):
     plt.xticks(rotation=45)
     plt.axhline(0, color='black', linewidth=0.8)
     plt.tight_layout()
-    
     return fig

@@ -23,16 +23,25 @@ def show():
 
     df = load_data()
 
-    year_min, year_max = int(df['Year'].min()), int(df['Year'].max())
-    selected_years = st.sidebar.slider("Select Year Range", year_min, year_max, (year_min, year_max))
+    if 'show_filters' not in st.session_state:
+        st.session_state.show_filters = False
 
-    filtered_df = df[(df['Year'] >= selected_years[0]) & (df['Year'] <= selected_years[1])]
+    if st.sidebar.button("🔍 Show/Hide Filters"):
+        st.session_state.show_filters = not st.session_state.show_filters
 
-        # Latest year KPIs from filtered data
+    if st.session_state.show_filters:
+        year_min, year_max = int(df['Year'].min()), int(df['Year'].max())
+        selected_years = st.sidebar.slider("Select Year Range", year_min, year_max, (year_min, year_max))
+        filtered_df = df[(df['Year'] >= selected_years[0]) & (df['Year'] <= selected_years[1])]
+    else:
+        filtered_df = df
+
+    # Checkbox for showing raw data in sidebar
+    show_data = st.sidebar.checkbox("Show raw data")
+
     latest_year = filtered_df['Year'].max()
     latest_data = filtered_df[filtered_df['Year'] == latest_year].iloc[0]
 
-    # Display KPIs
     kpi1, kpi2, kpi3, kpi4, kpi5 = st.columns(5)
     kpi1.metric(label="Latest Year", value=latest_year)
     kpi2.metric(label="FTA (Million)", value=f"{latest_data['FTA (Million)']:.2f}")
@@ -40,7 +49,6 @@ def show():
     kpi4.metric(label="NRIs (Million)", value=f"{latest_data['NRIs (Million)']:.2f}")
     kpi5.metric(label="International Tourists (Million)", value=f"{latest_data['International Tourists (Million)']:.2f}")
 
-    # Set dark background style
     plt.style.use('dark_background')
 
     st.subheader("Arrivals Over Years (in Millions)")
@@ -49,19 +57,19 @@ def show():
     sns.lineplot(data=filtered_df, x='Year', y='NRIs (Million)', marker='o', label='NRIs')
     sns.lineplot(data=filtered_df, x='Year', y='International Tourists (Million)', marker='o', label='International Tourists')
     plt.ylabel("Arrivals (Million)")
-    plt.grid(color='gray', linestyle='--', linewidth=0.7)  # Dark gray grid
+    plt.grid(color='gray', linestyle='--', linewidth=0.7)
     plt.legend()
     st.pyplot(plt.gcf())
     plt.clf()
 
     st.subheader("Year-over-Year Percentage Changes")
     fig, axs = plt.subplots(3, 1, figsize=(12, 10), sharex=True)
-    fig.patch.set_facecolor('#121212')  # dark background for figure
+    fig.patch.set_facecolor('#121212')
 
     sns.barplot(data=filtered_df, x='Year', y='FTA % Change', ax=axs[0], color='skyblue')
     axs[0].set_title("FTA % Change")
     axs[0].grid(color='gray', linestyle='--', linewidth=0.7)
-    axs[0].set_facecolor('#121212')  # dark background for subplot
+    axs[0].set_facecolor('#121212')
     axs[0].axhline(0, color='white', linestyle='--')
 
     sns.barplot(data=filtered_df, x='Year', y='NRIs % Change', ax=axs[1], color='lightgreen')
@@ -87,5 +95,5 @@ def show():
     st.pyplot(fig)
     plt.clf()
 
-    if st.checkbox("Show raw data"):
+    if show_data:
         st.dataframe(filtered_df)

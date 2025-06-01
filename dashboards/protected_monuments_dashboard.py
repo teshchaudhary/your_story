@@ -12,16 +12,28 @@ def show():
 
     df = load_data()
 
-    # Sidebar filters
-    circles = sorted(df["Circle"].unique())
-    selected_circle = st.sidebar.selectbox("Select Circle", ["All"] + circles)
-    if selected_circle != "All":
-        df = df[df["Circle"] == selected_circle]
+    # Initialize session state variable for filters visibility if not present
+    if "show_filters" not in st.session_state:
+        st.session_state.show_filters = False
 
-    monument_list = sorted(df["Name of the Monument"].unique())
-    selected_monument = st.sidebar.selectbox("Select Monument", ["All"] + monument_list)
-    if selected_monument != "All":
-        df = df[df["Name of the Monument"] == selected_monument]
+    # Sidebar toggle button to show/hide filters
+    if st.sidebar.button("🔍 Show/Hide Filters"):
+        st.session_state.show_filters = not st.session_state.show_filters
+
+    # Sidebar checkbox for showing raw data
+    show_raw = st.sidebar.checkbox("Show Raw Data")
+
+    # Filters section (conditionally shown)
+    if st.session_state.show_filters:
+        circles = sorted(df["Circle"].unique())
+        selected_circle = st.sidebar.selectbox("Select Circle", ["All"] + circles)
+        if selected_circle != "All":
+            df = df[df["Circle"] == selected_circle]
+
+        monument_list = sorted(df["Name of the Monument"].unique())
+        selected_monument = st.sidebar.selectbox("Select Monument", ["All"] + monument_list)
+        if selected_monument != "All":
+            df = df[df["Name of the Monument"] == selected_monument]
 
     # ========== KPI Section ==========
     st.markdown("## 🔢 Key Performance Indicators")
@@ -74,3 +86,7 @@ def show():
     ]].copy()
     st.dataframe(growth_df.sort_values("% Growth 2021-21/2019-20-Domestic", ascending=True))
 
+    # Show raw data preview if checked
+    if show_raw:
+        st.subheader("Raw Data Preview")
+        st.dataframe(df)
